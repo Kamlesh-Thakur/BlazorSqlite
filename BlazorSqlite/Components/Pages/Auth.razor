@@ -1,0 +1,13 @@
+﻿@page "/auth"
+
+@using Microsoft.AspNetCore.Authorization
+
+@attribute [Authorize]
+
+<PageTitle>Auth</PageTitle>
+
+<h1>You are authenticated</h1>
+<HxIcon Icon="@BootstrapIcon.HandThumbsUp" CssClass="display-3" />
+<AuthorizeView>
+    Hello @context.User.Identity?.Name!
+</AuthorizeView>

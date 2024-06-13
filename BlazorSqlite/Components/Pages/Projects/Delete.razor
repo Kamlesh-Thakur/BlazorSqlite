@@ -1,0 +1,36 @@
+﻿@page "/projects/delete/{id:int}"
+@using BlazorSqlite.Models
+@using BlazorSqlite.Services
+@inject IProjectService ProjectService
+@inject NavigationManager NavigationManager
+@code {
+    [Parameter] public int id { get; set; }
+    private Project project;
+
+    protected override async Task OnInitializedAsync()
+    {
+        project = await ProjectService.GetProjectByIdAsync(id);
+    }
+
+    private async Task DeleteProject()
+    {
+        await ProjectService.DeleteProjectAsync(id);
+        NavigationManager.NavigateTo("/projects");
+    }
+}
+
+<h3>Delete Project</h3>
+
+@if (project == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div>
+        <h4>Are you sure you want to delete the following project?</h4>
+        <p>@project.Name - @project.Description</p>
+        <button class="btn btn-danger" @onclick="DeleteProject">Delete</button>
+        <a href="/projects">Cancel</a>
+    </div>
+}

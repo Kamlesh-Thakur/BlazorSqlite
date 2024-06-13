@@ -1,0 +1,14 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc
+@attribute [IgnoreAntiforgeryToken]
+@inject SignInManager<IdentityUser> SignInManager
+@inject IdentityRedirectManager RedirectManager
+
+@functions {
+    public async Task OnPost()
+    {
+        await SignInManager.SignOutAsync();
+
+        RedirectManager.RedirectTo("Account/Login");
+    }
+}

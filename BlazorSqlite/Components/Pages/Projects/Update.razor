@@ -1,0 +1,62 @@
+﻿@page "/projects/edit/{id:int}"
+@using BlazorSqlite.Models
+@using BlazorSqlite.Services
+@inject IProjectService ProjectService
+@inject NavigationManager NavigationManager
+@inject IWebHostEnvironment WebHostEnvironment
+@code {
+    [Parameter] public int id { get; set; }
+    private Project project;
+
+    protected override async Task OnInitializedAsync()
+    {
+        project = await ProjectService.GetProjectByIdAsync(id);
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        await ProjectService.UpdateProjectAsync(project);
+        NavigationManager.NavigateTo("/projects");
+    }
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        var filePath = Path.Combine(WebHostEnvironment.WebRootPath, "uploads", file.Name);
+
+        Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+
+        await using var fileStream = new FileStream(filePath, FileMode.Create);
+        await file.OpenReadStream().CopyToAsync(fileStream);
+
+        project.DatabasePath = filePath;
+    }
+}
+
+<h3>Edit Project</h3>
+
+@if (project == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <EditForm Model="project" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label for="name">Name</label>
+            <InputText id="name" class="form-control" @bind-Value="project.Name" />
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <InputText id="description" class="form-control" @bind-Value="project.Description" />
+        </div>
+        <div class="form-group">
+            <label for="databasePath">Database Path</label>
+            <InputFile id="databasePath" class="form-control" OnChange="HandleFileSelected" />
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </EditForm>
+}
