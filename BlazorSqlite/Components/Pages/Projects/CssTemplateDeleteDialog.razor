@@ -1,0 +1,19 @@
+@inherits HxDialogBase<bool>
+
+<HxModal @ref="modal" Title="Confirm Delete" FooterCssClass="justify-content-between" OnClosed="()=> deleteAllReferences = false">
+    @* @ref="modal" is required by HxDialogBase<> *@
+    <BodyTemplate>
+        <div>Are you sure you want to delete the selected templates?</div>
+
+    </BodyTemplate>
+    <FooterTemplate>
+        <div>
+            <HxButton Text="Cancel" OnClick="HideAsCancelledAsync" Color="ThemeColor.Secondary" />
+            <HxButton Text="DELETE" OnClick="async () => await HideAsync(deleteAllReferences)" Color="ThemeColor.Danger" />
+        </div>
+    </FooterTemplate>
+</HxModal>
+
+@code {
+    private bool deleteAllReferences;
+}

@@ -1,4 +1,5 @@
 ﻿@page "/projects"
+@using BlazorSqlite.Components.Account.Shared
 @using BlazorSqlite.Models
 @using BlazorSqlite.Services
 @inject IProjectService ProjectService
@@ -6,51 +7,134 @@
 
 @rendermode InteractiveServer
 
-<h3>Projects</h3>
-
 @if (projects == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Database Path</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var project in projects)
-            {
-                <tr>
-                    <td>@project.Name</td>
-                    <td>@project.Description</td>
-                    <td>@project.DatabasePath</td>
-                    <td>
-                        <button class="btn btn-primary" @onclick="() => LoadDatabase(project.DatabasePath)">View</button>
-                        <a href="projects/delete/@project.Id" class="btn btn-danger">Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-    <a href="/projects/create" class="btn btn-success">Create New Project</a>
+    <div class="list-page page component-horiz">
+        <Grid @ref="_grid"
+              TItem="Project"
+              Title="Available Projects"
+              GetItems="HandleGetTemplates"
+              FilterEnabled="true"
+              SearchEnabled="true"
+              MultiSelectionEnabled="true"
+              PadSideCar="false"
+              SelectionEnabled="true"
+              SelectedItemChanged="HandleSelectedDataItemChanged"
+              ShowBorder="false"
+              SideCarEnabled="false"
+              AutoGenerateColumns="false">
+            <CommandsTemplate>
+                <HxButton Color="ThemeColor.Primary"
+                          Icon="BootstrapIcon.PlusLg"
+                          Text="New Project"
+                          />
+            </CommandsTemplate>
+            <Columns>
+                <HxGridColumn HeaderText="Name" SortKeySelector="@((item) => item.Name)" IsDefaultSortColumn="true" SortDirection="Havit.Collections.SortDirection.Ascending">
+                    <ItemTemplate Context="item">
+                        <HxTooltip Text="@item.Description">
+                            @item.Name
+                        </HxTooltip>
+                    </ItemTemplate>
+                </HxGridColumn>
+                <HxGridColumn HeaderText="Description" SortKeySelector="@((item) => item.Description)" IsDefaultSortColumn="true" SortDirection="Havit.Collections.SortDirection.Ascending">
+                    <ItemTemplate Context="item">
+                        <HxTooltip Text="@item.Description">
+                            @item.Description
+                        </HxTooltip>
+                    </ItemTemplate>
+                </HxGridColumn>
+                <HxGridColumn HeaderText="Database Path">
+                    <ItemTemplate Context="item">
+                        @item.DatabasePath
+                    </ItemTemplate>
+                </HxGridColumn>
+                <HxGridColumn>
+                    <ItemTemplate Context="item">
+                        <ThreeDots>
+                            <MenuItems>
+                                <HxDropdownItem OnClick="() => DeleteTemplate(item.Id)">
+                                    <HxIcon Icon="BootstrapIcon.Trash" /> Delete
+                                </HxDropdownItem>
+                            </MenuItems>
+                        </ThreeDots>
+                    </ItemTemplate>
+                </HxGridColumn>
+
+            </Columns>
+        </Grid>
+    </div>
+    
+    <CssTemplateDeleteDialog @ref="deleteDialog" />
 }
 
 @code {
+    protected Grid<Project>? _grid { get; set; }
+    public RenderFragment? EmptyDataTemplate { get; set; }
+    public RenderFragment? Columns { get; set; }
     private List<Project> projects;
+    public Project? SelectedItem { get; set; } = default;
+    public GridContentNavigationMode GridContentNavigationMode { get; set; } = GridContentNavigationMode.Pagination;
 
     protected override async Task OnInitializedAsync()
     {
         projects = await ProjectService.GetProjectsAsync();
     }
 
+    private async Task<GridDataProviderResult<Project>> GetGridData(GridDataProviderRequest<Project> request)
+    {
+        var data = await ProjectService.GetProjectsAsync();
+        return new GridDataProviderResult<Project>()
+            {
+                Data = data,
+                TotalCount = data.Count
+            };
+    }
+
+    protected async Task HandleSelectedDataItemChanged(Project? item)
+    {
+        // if the selected item is null the grid could have been refreshed, but we want
+        // to keep the previously selected item so just return
+        if (item == null) return;
+
+        SelectedItem = item;
+
+        await InvokeAsync(StateHasChanged);
+
+        NavigationManager.NavigateTo($"/database/{Uri.EscapeDataString(item.DatabasePath)}");
+    }
+
     private void LoadDatabase(string dbPath)
     {
         NavigationManager.NavigateTo($"/database/{Uri.EscapeDataString(dbPath)}");
     }
+
+    private Task<List<Project>> HandleGetTemplates()
+    {
+        if (projects == null)
+            return Task.FromResult(new List<Project>());
+
+        return Task.FromResult(projects);
+    }
+
+    private async Task DeleteTemplate(int cssId)
+    {
+        if (deleteDialog == null)
+            return;
+
+        var result = await deleteDialog.ShowAsync();
+
+        if (!result.Successful)
+            return;
+
+        // await cssConsumer.DeleteTemplate(cssId);
+
+        await HandleGetTemplates();
+    }
+
+    CssTemplateDeleteDialog? deleteDialog;
 }

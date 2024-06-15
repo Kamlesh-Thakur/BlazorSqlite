@@ -1,0 +1,18 @@
+﻿.three-dots-component {
+    --three-dot-icon-padding-right: 0.375rem;
+}
+
+    .three-dots-component ::deep .btn.icon-only.btn-link.dropdown-toggle::after {
+        display: none; /* hide the dropdown arrow */
+    }
+
+    .three-dots-component ::deep .btn.icon-only {
+        border: 0;
+        --bs-btn-padding-x: var(--three-dot-icon-padding-right);
+        color: var(--bs-body-color);
+    }
+
+
+    .three-dots-component ::deep .dropdown-menu .dropdown-item i {
+        padding-right: var(--three-dot-icon-padding-right);
+    }

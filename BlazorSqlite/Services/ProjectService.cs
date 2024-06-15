@@ -1,5 +1,6 @@
 ﻿using BlazorSqlite.Data;
 using BlazorSqlite.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace BlazorSqlite.Services;
 
 [IgnoreAntiforgeryToken]
+[Authorize]
 public class ProjectService : IProjectService
 {
     private readonly ApplicationDbContext _dbContext;

@@ -1,19 +1,77 @@
 ﻿@page "/"
+@inject IProjectService ProjectService
+@using BlazorSqlite.Services
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Data.Sqlite
+
+@attribute [Authorize]
 
 <PageTitle>Dashboard</PageTitle>
 
-<div class="row">
-    <HxCard style="width: 45%; margin-right:1rem">
-        <BodyTemplate>
-            <HxCardTitle>Number of Correspondence</HxCardTitle>
-            <HxCardSubtitle CssClass="mb-2 text-muted">18</HxCardSubtitle>
-        </BodyTemplate>
-    </HxCard>
+@if (projectDetails == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    @foreach (var item in projectDetails)
+    {
+        <HxCard style="width: 30%;">
+            <HeaderTemplate>Project: <strong>@item.ProjectName</strong></HeaderTemplate>
+            <BodyTemplate>
+                <div class="row justify-content-evenly">
+                    <HxCard style="width: 40%">
+                        <BodyTemplate>
+                            <HxCardSubtitle CssClass="mb-2 text-muted">Correspondence</HxCardSubtitle>
+                            <HxCardTitle>@item.CorrespondenceCount</HxCardTitle>
+                        </BodyTemplate>
+                    </HxCard>
 
-    <HxCard style="width: 45%;">
-        <BodyTemplate>
-            <HxCardTitle>Number of Documents</HxCardTitle>
-            <HxCardSubtitle CssClass="mb-2 text-muted">50</HxCardSubtitle>
-        </BodyTemplate>
-    </HxCard>
-</div>
+                    <HxCard style="width: 40%">
+                        <BodyTemplate>
+                            <HxCardSubtitle CssClass="mb-2 text-muted">Documents</HxCardSubtitle>
+                            <HxCardTitle>@item.DocumentCount</HxCardTitle>
+                        </BodyTemplate>
+                    </HxCard>
+                </div>
+            </BodyTemplate>
+        </HxCard>
+    }
+}
+
+@code {
+    private List<DocumentAndCorrespondenceCount> projectDetails = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var projects = await ProjectService.GetProjectsAsync();
+
+        foreach (var project in projects)
+        {
+            if (string.IsNullOrWhiteSpace(project.DatabasePath)) continue;
+
+            using var connection = new SqliteConnection($"Data Source={project.DatabasePath}");
+            connection.Open();
+
+            using var command = new SqliteCommand($"SELECT count (Id) FROM Correspondence;", connection);
+            var correspondenceCount = command.ExecuteScalar();
+
+            using var command1 = new SqliteCommand($"SELECT count (Id) FROM Document;", connection);
+            var documentCount = command1.ExecuteScalar();
+
+            projectDetails.Add(new DocumentAndCorrespondenceCount
+                {
+                    ProjectName = project.Name,
+                    CorrespondenceCount = correspondenceCount == null ? 0 : (long)correspondenceCount,
+                    DocumentCount = documentCount == null ? 0 : (long)documentCount
+                });
+        }
+    }
+
+    private sealed class DocumentAndCorrespondenceCount
+    {
+        public string ProjectName { get; set; } = string.Empty;
+        public long CorrespondenceCount { get; set; }
+        public long DocumentCount { get; set; }
+    }
+}

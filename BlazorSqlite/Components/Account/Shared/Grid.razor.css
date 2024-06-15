@@ -1,0 +1,279 @@
+﻿.grid-with-sidecar-component {
+    display: flex;
+    flex-direction: row;
+    overflow: auto;
+    flex-grow: 1;
+    --header-height: 68px;
+    --header-bg-color: var(--bs-tertiary-bg);
+    --header-border-bottom: 1px solid var(--bs-border-color-translucent);
+}
+
+    .grid-with-sidecar-component ::deep .split-zone > horizontal > split {
+        overflow: auto;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .grid-with-sidecar-component ::deep .card {
+        flex-grow: 1;
+    }
+
+
+    .grid-with-sidecar-component ::deep .grid > .card > .card-header {
+        min-height: var(--header-height);
+        max-height: var(--header-height);
+    }
+
+    .grid-with-sidecar-component ::deep .grid > .card > .card-body {
+        overflow: auto;
+        display: flex;
+        flex-direction: column;
+        --bs-card-spacer-y: 0px;
+        --bs-card-spacer-x: 0px;
+    }
+
+.grid ::deep > .card > .no-visible-grid-title {
+    display: none;
+}
+
+.grid ::deep > .card > .card-header h5.card-title {
+    margin-bottom: 0;
+}
+
+.grid-with-sidecar-component ::deep .table-responsive {
+    height: 100%;
+}
+
+.grid ::deep > .hx-list-layout > .card > .hx-progress-overlay {
+    padding: var(--app-padding);
+}
+/*    .grid-with-sidecar-component ::deep .hx-list-layout.pad-for-chips .hx-list-layout-header {
+        padding-bottom: 1.5rem;
+        position: relative;
+    }*/
+.filter-columnselect {
+    display: flex;
+    align-content: center;
+    justify-content: space-between;
+    border-bottom: var(--header-border-bottom);
+}
+
+    .filter-columnselect ::deep .hx-chip-list .badge {
+        --bs-badge-font-size: .725rem;
+    }
+
+    .filter-columnselect ::deep.hx-chip-list .hx-chip-list-label {
+        --hx-chip-list-chip-label-font-weight: 400;
+        --hx-chip-list-chip-label-margin: .25rem;
+        --hx-chip-list-chip-label-opacity: .85;
+        font-weight: var(--hx-chip-list-chip-label-font-weight);
+        margin-right: var(--hx-chip-list-chip-label-margin);
+        opacity: var(--hx-chip-list-chip-label-opacity);
+    }
+
+.grid, .grid ::deep > * {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+}
+
+.hide-card-header {
+}
+
+    .hide-card-header ::deep .card-header {
+        display: none;
+    }
+
+
+.grid ::deep .multiselect-alert {
+    --bs-alert-padding-y: 0;
+    --bs-alert-margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .grid ::deep .multiselect-alert .btn-close {
+        padding: 0;
+        top: unset;
+        right: 1rem;
+    }
+
+.sidecar {
+    border-top: 1px solid var(--bs-border-color-translucent);
+    display: flex;
+    overflow: auto;
+    flex-grow: 1;
+}
+
+.sidecar-detail {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    overflow: auto;
+    flex-grow: 1;
+}
+
+    .sidecar-detail ::deep h5 {
+        margin-bottom: 0;
+    }
+
+.sidecar-detail-header {
+    padding: 1rem;
+    border-bottom: var(--header-border-bottom);
+    display: flex;
+    width: 100%;
+    min-height: var(--header-height);
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--header-bg-color);
+}
+
+    .sidecar-detail-header ::deep h5 {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        margin-bottom: 0;
+    }
+
+.sidecar-detail-info {
+    flex-grow: 1;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding-right: 8px; /* this is to match the gutter of the split zone*/
+}
+
+.grid-with-sidecar-component ::deep .grid-title-badge {
+    margin-left: 0.5rem;
+}
+
+.grid-with-sidecar-component ::deep > .grid > .card, .grid-with-sidecar-component ::deep > .split-zone > .split-area-horizontal > split > .grid > .card {
+    border-bottom-width: 0px;
+}
+
+.grid-with-sidecar-component.hide-border ::deep > .grid > .card, .grid-with-sidecar-component.hide-border ::deep > .split-zone > .split-area-horizontal > split > .grid > .card {
+    border: none;
+}
+
+.grid-with-sidecar-component.hide-border ::deep > .split-zone > horizontal > split > .sidecar {
+    border-top: none;
+}
+
+.grid-with-sidecar-component ::deep .offcanvas-filter .dynamic-form-component {
+    display: flex;
+    flex-grow: 1;
+}
+
+    .grid-with-sidecar-component ::deep .offcanvas-filter .dynamic-form-component form {
+        width: 100%;
+    }
+
+.grid ::deep .btn.icon-only.btn-link {
+    --bs-btn-padding-y: 0;
+    --bs-btn-padding-x: .375rem;
+    --bs-btn-font-size: 1rem;
+    --bs-btn-font-weight: 400;
+    --bs-btn-line-height: 1.5;
+    --bs-btn-color: var(--bs-gray-700);
+    --bs-btn-bg: transparent;
+    --bs-btn-border-width: 1px;
+    --bs-btn-border-color: transparent;
+    --bs-btn-hover-border-color: transparent;
+    --bs-btn-box-shadow: inset 0 1px 0 rgba(255,255,255,.15),0 1px 1px rgba(0,0,0,.075);
+    --bs-btn-disabled-opacity: .65;
+    --bs-btn-focus-box-shadow: 0 0 0 .25rem rgba(var(--bs-btn-focus-shadow-rgb),.5);
+    text-decoration: none;
+}
+
+    .grid ::deep .btn.icon-only.btn-link.dropdown-toggle::after {
+        display: none;
+    }
+
+
+
+.grid ::deep tr > th > .btn.icon-only {
+    line-height: 1;
+}
+
+.grid ::deep .btn.icon-only:hover {
+    color: var(--app-primary-500) !important;
+}
+
+.grid ::deep td .dynamic-icon-control {
+    padding-right: 0.5rem;
+}
+
+    .grid ::deep td .dynamic-icon-control i.dynamic-icon {
+        font-size: 16px;
+        line-height: 1;
+    }
+
+.grid ::deep table.no-wrap {
+    width: 100%;
+    table-layout: fixed;
+}
+
+.grid ::deep table.no-wrap {
+    width: 100%;
+    table-layout: fixed;
+}
+
+.grid ::deep table th, .grid ::deep table td {
+    white-space: unset;
+}
+
+.grid ::deep table.no-wrap th, .grid ::deep table.no-wrap td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.grid ::deep table.no-wrap th {
+    white-space: nowrap; /* This will keep content on a single line */
+}
+
+.grid ::deep table th.fixed50 {
+    width: 50px;
+}
+
+.grid ::deep table.no-header thead {
+    display: none;
+}
+
+.grid ::deep .main-table {
+    margin-bottom: 0;
+}
+
+    .grid ::deep .main-table thead th .form-check-input {
+        margin: 0.25rem;
+    }
+
+    .grid ::deep .main-table td.hx-context-menu-grid-column .hx-context-menu-btn {
+        --bs-btn-padding-y: 0;
+        --bs-btn-padding-x: 0.25rem;
+    }
+
+.grid.grid-load-more ::deep table {
+    margin-bottom: 35px;
+    z-index: 1;
+}
+
+.grid.grid-load-more ::deep .hx-grid-load-more-container {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 35px;
+}
+
+
+.grid-with-sidecar-component ::deep > .split-zone > .split-area-horizontal > .gutter-horizontal::after {
+    width: var(--gutter-width);
+    background-color: var(--header-bg-color);
+    height: var(--header-height);
+    border-bottom: var(--header-border-bottom);
+    content: "";
+    position: absolute;
+}

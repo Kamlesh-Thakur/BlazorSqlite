@@ -1,0 +1,19 @@
+﻿.list-page {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.list-pills {
+    display: flex;
+    justify-content: space-evenly;
+    max-width: 250px;
+}
+
+.list-page ::deep .list-pill {
+    margin-right: 1px;
+}
+
+.list-count-col {
+    max-width: 80px;
+}
